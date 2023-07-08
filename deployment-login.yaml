@@ -1,39 +1,21 @@
 apiVersion: apps/v1
-kind: Deployment # Kubernetes resource kind we are creating
+kind: Deployment
 metadata:
   name: login
+  labels:
+    app: login
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: spring-boot-k8s
-  replicas: 1 # Number of replicas that will be created for this deployment
+      app: login
   template:
     metadata:
       labels:
-        app: spring-boot-k8s
+        app: login
     spec:
       containers:
-        - name: login
-          image: janmenjaya/login:latest # Image that will be used to containers in the cluster
-          imagePullPolicy: IfNotPresent
-          #imagePullPolicy: Always
-          ports:
-            - containerPort: 30003 # The port that the container is running on in the cluster
-
-
----
-
-apiVersion: v1 # Kubernetes API version
-kind: Service # Kubernetes resource kind we are creating
-metadata: # Metadata of the resource kind we are creating
-  #name: login-service
-  name: login
-spec:
-  selector:
-    app: spring-boot-k8s
-  ports:
-    - protocol: "TCP"
-      port: 30003 # The port that the service is running on in the cluster
-      targetPort: 30003 # The port exposed by the service
-      nodePort: 30003
-  type: NodePort # type of the service.
+      - name: login
+        image: janmenjaya/login
+        ports:
+        - containerPort: 30003

@@ -30,20 +30,29 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    metallb.universe.tf/ip-allocated-from-pool: first-pool
   labels:
     app: login
   name: login
   namespace: default
 spec:
-  clusterIP: 10.110.193.62
-  clusterIPs:
-  - 10.110.193.62
+  allocateLoadBalancerNodePorts: true
+  externalTrafficPolicy: Cluster
   internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
   ports:
-  - port: 30003
+  - nodePort: 32096
+    port: 30003
     protocol: TCP
     targetPort: 30003
   selector:
     app: login
   sessionAffinity: None
-  type: ClusterIP
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+    - ip: 192.168.56.243
